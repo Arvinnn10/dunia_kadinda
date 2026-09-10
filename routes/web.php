@@ -7,4 +7,4 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/layanan', [LayananController::class, 'index'])->name('layanan.index');
+Route::resource('/layanan', LayananController::class);
