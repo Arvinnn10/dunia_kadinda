@@ -7,30 +7,32 @@ use Illuminate\Http\Request;
 
 class LayananController extends Controller
 {
-    /**
-     * Menampilkan daftar layanan.
-     */
     public function index()
     {
         $layanan = Layanan::all();
-        return view('layanan.inputlayanan', compact('layanan'));
+        return view('layanan.index', compact('layanan'));
     }
 
     public function create()
     {
-        return view('layanan.inputlayanan');
+        return view('layanan.create');
     }
 
     public function store(Request $request)
     {
-        // Validasi input
-        $request->validate([
-            'nama_layanan' => 'required|string|max:255',
-            'deskripsi' => 'nullable|string',
+        $validated = $request->validate([
+            'nama_layanan' => 'required',
+            'deskripsi' => 'nullable',
+            'harga' => 'required|numeric',
+            'status' => 'required',
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        // Simpan data layanan ke database
-        Layanan::create($request->all());
+        if ($request->hasFile('gambar')) {
+            $validated['icon'] = $request->file('gambar')->store('layanan', 'public');
+        }
+
+        Layanan::create($validated);
 
         return redirect()->route('layanan.index')->with('success', 'Layanan berhasil ditambahkan.');
     }
