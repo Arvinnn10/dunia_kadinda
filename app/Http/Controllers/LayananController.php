@@ -36,4 +36,13 @@ class LayananController extends Controller
 
         return redirect()->route('layanan.index')->with('success', 'Layanan berhasil ditambahkan.');
     }
+
+    public function destroy($id)
+    {
+        //
+        $layanan = Layanan::findOrFail($id);
+        $layanan->delete();
+
+        return redirect()->route('layanan.index')->with('success', 'Layanan berhasil dihapus.');
+    }
 }

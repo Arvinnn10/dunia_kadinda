@@ -72,6 +72,7 @@
                 <th>Deskripsi</th>
                 <th>Harga</th>
                 <th>Status</th>
+                <th>Aksi</th>
             </tr>
         </thead>
         <tbody>
@@ -83,6 +84,14 @@
                     <td>{{ $item->deskripsi ?? '-' }}</td>
                     <td>{{ $item->harga }}</td>
                     <td>{{ $item->status }}</td>
+                    <td>
+                        <a href="{{ route('layanan.edit', $item->id) }}" class="btn">Edit</a>
+                        <form action="{{ route('layanan.destroy', $item->id) }}" method="POST" style="display: inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn" onclick="return confirm('Apakah Anda yakin ingin menghapus layanan ini?')">Hapus</button>
+                        </form>
+                    </td>
                 </tr>
             @endforeach
         </tbody>
