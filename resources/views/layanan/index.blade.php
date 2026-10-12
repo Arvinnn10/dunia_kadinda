@@ -85,6 +85,7 @@
                     <td>{{ $item->harga }}</td>
                     <td>{{ $item->status }}</td>
                     <td>
+                        <a href="{{ route('layanan.show', $item->id) }}" class="btn" style="background-color: #17a2b8;">Detail</a>
                         <a href="{{ route('layanan.edit', $item->id) }}" class="btn">Edit</a>
                         <form action="{{ route('layanan.destroy', $item->id) }}" method="POST" style="display: inline;">
                             @csrf
