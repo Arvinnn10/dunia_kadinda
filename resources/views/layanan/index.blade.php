@@ -76,18 +76,21 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($layanan as $item)
+            {{-- ini looping data layanan --}}
+            @foreach ($layanan as $listlayanan)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
-                    <td>{!! $item->icon ? '<img src="'.asset('storage/'.$item->icon).'" width="60">' : '-' !!}</td>
-                    <td>{{ $item->nama_layanan }}</td>
-                    <td>{{ $item->deskripsi ?? '-' }}</td>
-                    <td>{{ $item->harga }}</td>
-                    <td>{{ $item->status }}</td>
+                    <td>{!! $listlayanan->icon ? '<img src="'.asset('storage/'.$listlayanan->icon).'" width="60">' : '-' !!}</td>
+                    <td>{{ $listlayanan->nama_layanan }}</td>
+                    <td>{{ $listlayanan->deskripsi ?? '-' }}</td>
+                    <td>{{ $listlayanan->harga }}</td>
+                    <td>{{ $listlayanan->status }}</td>
                     <td>
-                        <a href="{{ route('layanan.show', $item->id) }}" class="btn" style="background-color: #17a2b8;">Detail</a>
-                        <a href="{{ route('layanan.edit', $item->id) }}" class="btn">Edit</a>
-                        <form action="{{ route('layanan.destroy', $item->id) }}" method="POST" style="display: inline;">
+                        {{-- ini buat show detailnya --}}
+                        <a href="{{ route('layanan.show', $listlayanan->id) }}" class="btn" style="background-color: #17a2b8;">Detail</a>
+                        {{-- ini buat editnya --}}
+                        <a href="{{ route('layanan.edit', $listlayanan->id) }}" class="btn">Edit</a>
+                        <form action="{{ route('layanan.destroy', $listlayanan->id) }}" method="POST" style="display: inline;">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn" onclick="return confirm('Apakah Anda yakin ingin menghapus layanan ini?')">Hapus</button>

@@ -7,18 +7,23 @@ use Illuminate\Http\Request;
 
 class LayananController extends Controller
 {
+ //ini func index buat menampilkan data----------------------------------------------
     public function index()
     {
         $layanan = Layanan::all();
         return view('layanan.index', compact('layanan'));
     }
 
-    public function create()
+
+//func create buat nambahin datanya---------------------------------
+    public function create()  
     {
         return view('layanan.create');
     }
 
-    public function store(Request $request)
+
+//func store buat nyimpen datanya---------------------------------------
+    public function store(Request $request)  
     {
         $validated = $request->validate([
             'nama_layanan' => 'required',
@@ -37,13 +42,16 @@ class LayananController extends Controller
         return redirect()->route('layanan.index')->with('success', 'Layanan berhasil ditambahkan.');
     }
 
-    public function show(string $id)
+
+//func show buat menampilkan detail layanannya----------------------------
+    public function show(string $id) 
     {
         $layanan = Layanan::findOrFail($id);
-        return view('layanan.show', compact('layanan'));
+        return view('layanan.detaillayanan', compact('layanan'));
     }
 
-    public function destroy(string $id)
+//func destroy buat hapus datanya--------------------------------------
+    public function destroy(string $id)  
     {
         $layanan = Layanan::findOrFail($id);
         $layanan->delete();
