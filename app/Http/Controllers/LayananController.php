@@ -50,6 +50,7 @@ class LayananController extends Controller
         return view('layanan.detaillayanan', compact('layanan'));
     }
 
+
 //func destroy buat hapus datanya--------------------------------------
     public function destroy(string $id)  
     {
