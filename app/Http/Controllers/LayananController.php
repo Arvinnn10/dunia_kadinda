@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Layanan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class LayananController extends Controller
 {
@@ -48,6 +49,41 @@ class LayananController extends Controller
     {
         $layanan = Layanan::findOrFail($id);
         return view('layanan.detaillayanan', compact('layanan'));
+    }
+
+
+//func edit buat menampilkan form edit datanya----------------------------
+    public function edit(string $id) 
+    {
+        $layanan = Layanan::findOrFail($id);
+        return view('layanan.edit', compact('layanan'));
+    }
+
+
+//func update buat nyimpen perubahan datanya---------------------------
+    public function update(Request $request, string $id)
+    {
+        $validated = $request->validate([
+            'nama_layanan' => 'required',
+            'deskripsi' => 'nullable',
+            'harga' => 'required|numeric',
+            'status' => 'required',
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        $layanan = Layanan::findOrFail($id);
+
+        if ($request->hasFile('gambar')) {
+            // Hapus gambar lama jika ada
+            if ($layanan->icon && Storage::disk('public')->exists($layanan->icon)) {
+                Storage::disk('public')->delete($layanan->icon);
+            }
+            $validated['icon'] = $request->file('gambar')->store('layanan', 'public');
+        }
+
+        $layanan->update($validated);
+
+        return redirect()->route('layanan.index')->with('success', 'Layanan berhasil diperbarui.');
     }
 
 
