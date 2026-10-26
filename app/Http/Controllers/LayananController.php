@@ -3,11 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\Layanan;
+use App\Exports\LayananExport;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class LayananController extends Controller
 {
+//func export excel-------------------------------------------------
+    public function exportExcel()
+    {
+        return Excel::download(new LayananExport, 'datalayanan.xlsx');
+    }
+
  //ini func index buat menampilkan data----------------------------------------------
     public function index()
     {

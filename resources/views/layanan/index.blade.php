@@ -12,7 +12,7 @@
         }
         .card {
             background: #fff;
-            max-width: 800px;
+            max-width: 950px;
             margin: auto;
             padding: 20px;
             border-radius: 6px;
@@ -21,14 +21,16 @@
         .btn {
             background-color: #007bff;
             color: white;
-            padding: 10px 16px;
+            padding: 8px 14px;
             text-decoration: none;
             border-radius: 4px;
             display: inline-block;
-            margin-bottom: 15px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
         }
         .btn:hover {
-            background-color: #0056b3;
+            opacity: 0.9;
         }
         .alert-success {
             background-color: #d4edda;
@@ -43,61 +45,101 @@
         table {
             width: 100%;
             border-collapse: collapse;
+            margin-top: 15px;
         }
         th, td {
             border: 1px solid #ccc;
             padding: 8px 12px;
             text-align: left;
+            vertical-align: middle;
         }
         th {
             background-color: #f2f2f2;
+        }
+        .action-btns {
+            display: flex;
+            gap: 5px;
+            align-items: center;
         }
     </style>
 </head>
 <body>
 
 <div class="card">
-    <h2>Daftar Layanan</h2>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+        <h2 style="margin: 0;">Daftar Layanan</h2>
+        @auth
+            <div>
+                <span>Halo, <b>{{ Auth::user()->name }}</b></span>
+                <form action="{{ route('logout') }}" method="POST" style="display: inline; margin-left: 10px;">
+                    @csrf
+                    <button type="submit" class="btn" style="background-color: #6c757d; padding: 5px 10px; font-size: 12px;">Logout</button>
+                </form>
+            </div>
+        @endauth
+    </div>
 
     <div class="alert-success">{{ session('success') }}</div>
 
-    <a href="{{ route('layanan.create') }}" class="btn">+ Tambah Layanan</a>
+    {{-- tombol tambah dan ekspor --}}
+    <div style="margin-bottom: 15px;">
+        <a href="{{ route('layanan.create') }}" class="btn">+ Tambah Layanan</a>
+        <a href="{{ route('datalayanan.pdf') }}" class="btn" style="background-color: #dc3545;" target="_blank">Ekspor PDF</a>
+        <a href="{{ route('datalayanan.excel') }}" class="btn" style="background-color: #28a745;">Ekspor Excel</a>
+    </div>
 
     <table>
         <thead>
             <tr>
-                <th>No</th>
-                <th>Gambar</th>
+                <th style="width: 40px; text-align: center;">No</th>
+                <th style="width: 70px; text-align: center;">Gambar</th>
                 <th>Nama Layanan</th>
                 <th>Deskripsi</th>
                 <th>Harga</th>
                 <th>Status</th>
-                <th>Aksi</th>
+                <th style="width: 180px; text-align: center;">Aksi</th>
             </tr>
         </thead>
         <tbody>
             {{-- ini looping data layanan --}}
-            @foreach ($layanan as $listlayanan)
+            @forelse ($layanan as $listlayanan)
                 <tr>
-                    <td>{{ $loop->iteration }}</td>
-                    <td>{!! $listlayanan->icon ? '<img src="'.asset('storage/'.$listlayanan->icon).'" width="60">' : '-' !!}</td>
+                    <td style="text-align: center;">{{ $loop->iteration }}</td>
+                    <td style="text-align: center;">
+                        @if ($listlayanan->icon)
+                            <img src="{{ asset('storage/'.$listlayanan->icon) }}" width="50" style="border-radius: 4px;">
+                        @else
+                            -
+                        @endif
+                    </td>
                     <td>{{ $listlayanan->nama_layanan }}</td>
                     <td>{{ $listlayanan->deskripsi ?? '-' }}</td>
-                    <td>{{ $listlayanan->harga }}</td>
+                    <td>Rp {{ number_format($listlayanan->harga, 0, ',', '.') }}</td>
                     <td>{{ $listlayanan->status }}</td>
                     <td>
-                        {{-- ini buat show detailnya --}}
-                        <a href="{{ route('layanan.show', $listlayanan->id) }}" class="btn" style="background-color: #17a2b8;">Detail</a>
-                        {{-- ini buat editnya --}}
-                        <a href="{{ route('layanan.edit', $listlayanan->id) }}" class="btn">Edit</a>
-                        <form action="{{ route('layanan.destroy', $listlayanan->id) }}" method="POST" style="display: inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn" onclick="return confirm('Apakah Anda yakin ingin menghapus layanan ini?')">Hapus</button>
-                        </form>
+                        <div class="action-btns">
+
+                            {{-- ini buat show detailnya --}}
+                            <a href="{{ route('layanan.show', $listlayanan->id) }}" class="btn" style="background-color: #17a2b8; padding: 5px 10px; font-size: 12px;">Detail</a>
+                            {{-- ini buat editnya --}}
+
+                            <a href="{{ route('layanan.edit', $listlayanan->id) }}" class="btn" style="background-color: #ffc107; color: black; padding: 5px 10px; font-size: 12px;">Edit</a>
+
+
+                            {{-- ini buat hapusnya --}}
+                            <form action="{{ route('layanan.destroy', $listlayanan->id) }}" method="POST" style="display: inline; margin: 0;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn" style="background-color: #dc3545; padding: 5px 10px; font-size: 12px;" onclick="return confirm('Apakah Anda yakin ingin menghapus layanan ini?')">Hapus</button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
-            @endforeach
+            @empty
+                <tr>
+                    <td colspan="7" style="text-align: center;">Belum ada data layanan.</td>
+                </tr>
+            @endforelse
         </tbody>
     </table>
 </div>

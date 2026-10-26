@@ -2,11 +2,17 @@
 
 use App\Http\Controllers\LayananController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PDFControlller;
 use Illuminate\Support\Facades\Route;
+use App\Exports\LayananExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('pdfdatalayanan', [PDFControlller::class, 'generatepdf'])->name('datalayanan.pdf');
+Route::get('exceldatalayanan', [LayananController::class, 'exportExcel'])->name('datalayanan.excel');
 
 Route::resource('/layanan', LayananController::class);
 
