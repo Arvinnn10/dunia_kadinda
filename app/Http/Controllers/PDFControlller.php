@@ -10,7 +10,7 @@ class PDFControlller extends Controller
     public function generatepdf(){
         $layanan = Layanan::all();
 
-        $pdf = Pdf::loadView('pdfdatalayanan', compact('layanan'));
+        $pdf = Pdf::loadView('layanan.pdfdatalayanan', ['layanan' => $layanan]);
         
         return $pdf->download('datalayanan.pdf');
     }

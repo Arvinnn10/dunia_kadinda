@@ -27,4 +27,18 @@ class LayananExport implements FromCollection, WithHeadings, WithMapping
             'Status',
         ];
     }
+
+    /**
+     * @param Layanan $row
+     */
+    public function map(mixed $row): array
+    {
+        return [
+            ++$this->no,
+            $row->nama_layanan,
+            $row->deskripsi ?? '-',
+            $row->harga,
+            $row->status,
+        ];
+    }
 }
